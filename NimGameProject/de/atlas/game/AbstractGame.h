@@ -38,10 +38,8 @@ namespace de::atlas::game {
             for(auto player: players) {
                 setCurrentPlayer(player);
                 playSingleTurn();
-            }// Integration
-
-
-        }
+            }
+       }
         void playSingleTurn() {
 
             if(isGameGameOver()) return;
@@ -68,9 +66,8 @@ namespace de::atlas::game {
 
 
         void printGameOverMessageIfGameIsOver() { // Operation
-            if(isGameGameOver()) {
-                std::cout   << _currentPlayer->getName() << " hat verloren";
-            }
+            if(isGameGameOver())  std::cout   << _currentPlayer->getName() << " hat verloren";
+
         }
 
     protected:

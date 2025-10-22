@@ -10,7 +10,7 @@ namespace de::atlas::game::nimgame::player {
     class ComputerPlayer: public AbstractNimGamePlayer{
         static inline int turns[] = {3,1,1,2};
     public:
-        explicit ComputerPlayer(const std::string &name) : AbstractNimGamePlayer(name) {}
+        using AbstractNimGamePlayer::AbstractNimGamePlayer;
 
         int doTurn(const int &stones) const override {
             const int turn = turns[stones % 4];

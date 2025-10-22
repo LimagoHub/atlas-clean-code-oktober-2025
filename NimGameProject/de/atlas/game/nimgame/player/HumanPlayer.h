@@ -11,7 +11,7 @@ namespace de::atlas::game::nimgame::player {
     class HumanPlayer : public AbstractNimGamePlayer {
 
     public:
-        explicit HumanPlayer(const std::string &name) : AbstractNimGamePlayer(name) {}
+        using AbstractNimGamePlayer::AbstractNimGamePlayer;
 
         ~HumanPlayer() override = default;
 

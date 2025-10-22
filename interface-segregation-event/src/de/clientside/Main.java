@@ -19,7 +19,10 @@ public class Main {
 		for (int i = 0; i < 11; i++) {
 			schwein.fuettern();
 		}
-	}
+
+       
+
+    }
 
 	class SchweineMetzgerAdapter implements PigTooFatListener {
 

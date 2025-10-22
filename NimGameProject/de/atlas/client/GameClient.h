@@ -13,6 +13,7 @@ namespace de::atlas::client {
         explicit GameClient(Game &game) : game(game) {}
 
         void go() {
+
             game.play();
         }
 
