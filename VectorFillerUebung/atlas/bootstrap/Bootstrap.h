@@ -31,7 +31,7 @@ namespace atlas::bootstrap {
         auto startApplication()-> void {
             const size_t availableProcessors = std::thread::hardware_concurrency();
 
-            for(size_t threadCount = 1; threadCount <= availableProcessors + 1; ++threadCount){
+            for(size_t threadCount = o; threadCount <= availableProcessors + 1; ++threadCount){
                 std::cout << "Messung mit " << threadCount << " Threads" << std::endl;
                 run(threadCount);
             }
