@@ -14,7 +14,7 @@ namespace atlas::container {
 
     public:
         virtual ~VectorFactory() = default;
-        virtual auto createAndFillVector(const size_t size) const noexcept -> VECTOR_POINTER = 0;
+        virtual auto createAndFillVector(const size_t size)  noexcept -> VECTOR_POINTER = 0;
 
     };
 }
