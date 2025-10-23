@@ -14,7 +14,8 @@ public:
         threadHolder_.reserve(threadCount);
         for (int i = 0; i < threadCount; ++i) {
 
-            threadHolder_.emplace_back(&TDemo::worker, this, i,i*10000);
+            threadHolder_.emplace_back(&TDemo::worker, this, i,i*1000);
+
         }
         for(auto & thread : threadHolder_) {
             thread.join();
