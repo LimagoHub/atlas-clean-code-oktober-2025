@@ -7,12 +7,12 @@
 #include <iostream>
 #include "../../VectorFactory.h"
 #include "../sequential/VectorFactorySequentialImpl.h"
-
+#include "../parallel/VectorFactoryParallelImpl.h"
 
 #include "../decorator/VectorFactoryBenchmarkDecorator.h"
 #include "../decorator/VectorFactoryLoggerDecorator.h"
 #include "../decorator/VectorFactorySecureDecorator.h"
-#include "../../../generator/Generator.h"
+#include "../../../generator/GeneratorBuilder.h"
 #include "../../../time/impl/StopwatchImpl.h"
 
 
@@ -24,7 +24,7 @@ namespace atlas::container {
     class VectorFactoryBuilder {
         using VECTOR_FACTORY = std::unique_ptr<atlas::container::VectorFactory<T>>;
         using VECTOR_FACTORY_SEQUENCIAL = atlas::container::VectorFactorySequentialImpl<T>;
-
+        using VECTOR_FACTORY_PARALLEL = atlas::container::VectorFactoryParallelImpl<T>;
 
         using VECTOR_FACTORY_BENCHMARK = atlas::container::VectorFactoryBenchmarkDecorator<T>;
         using VECTOR_FACTORY_LOGGER = atlas::container::VectorFactoryLoggerDecorator<T>;
@@ -33,17 +33,16 @@ namespace atlas::container {
         using STOPWATCH = std::unique_ptr<atlas::time::Stopwatch>;
 
 
-        using GENERATOR = std::unique_ptr<atlas::generator::Generator<T>>;
+        using GENERATOR_BUILDER = std::unique_ptr<atlas::generator::GeneratorBuilder<T>>;
 
     public:
 
-        static VECTOR_FACTORY createWithGenerator(GENERATOR generator) {
+        static VECTOR_FACTORY createWithGeneratorBuilder(GENERATOR_BUILDER generatorBuilder) {
             VECTOR_FACTORY result;
-            result = createStrategie(std::move(generator), std::move(result));
+            result = createStrategie(std::move(generatorBuilder), std::move(result));
             result = decorateFactory(std::move(result));
             return result;
         }
-
 
 
         static size_t getThreadCount() {
@@ -82,8 +81,13 @@ namespace atlas::container {
         inline static bool _secure{false};
         inline static STOPWATCH _stopwatch;
 
-        static VECTOR_FACTORY createStrategie(GENERATOR generator, VECTOR_FACTORY result) {
-            result = std::make_unique<VECTOR_FACTORY_SEQUENCIAL>(std::move(generator));
+        static VECTOR_FACTORY createStrategie(GENERATOR_BUILDER generatorBuilder, VECTOR_FACTORY result) {
+
+            switch(_threadCount) {
+
+                case 1:  result = std::make_unique<VECTOR_FACTORY_SEQUENCIAL>(std::move(generatorBuilder->create())); break;
+                default: result = std::make_unique<VECTOR_FACTORY_PARALLEL >(std::move(generatorBuilder), _threadCount); break;
+            }
             return result;
         }
         static VECTOR_FACTORY decorateFactory(VECTOR_FACTORY result) {

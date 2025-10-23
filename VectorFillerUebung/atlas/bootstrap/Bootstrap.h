@@ -10,7 +10,7 @@
 #include "../container/VectorFactory.h"
 #include "../client/impl/ClientImpl.h"
 #include "../container/impl/sequential/VectorFactorySequentialImpl.h"
-#include "../generator/impl/random/MersenneTwisterNumberGenerator.h"
+#include "../generator/impl/random/MersenneTwisterNumberGeneratorFactory.h"
 #include "../time/impl/StopwatchImpl.h"
 
 
@@ -20,7 +20,7 @@ namespace atlas::bootstrap {
         using VECTOR_FACTORY = std::unique_ptr<atlas::container::VectorFactory<int>>;
         using VECTOR_FACTORY_BUILDER = atlas::container::VectorFactoryBuilder<int>;
 
-        using GENERATOR = std::unique_ptr<generator::Generator<int>>;
+        using GENERATOR_BUILDER = std::unique_ptr<generator::GeneratorBuilder<int>>;
         using STOPWATCH = std::unique_ptr<time::Stopwatch>;
         using CLIENT = std::unique_ptr<atlas::client::Client>;
 
@@ -35,16 +35,16 @@ namespace atlas::bootstrap {
         }
 
     private:
-        static GENERATOR createGenerator() {
-            GENERATOR generator= std::make_unique<atlas::generator::MersenneTwisterNumberGenerator>();
-            return generator;
+        static GENERATOR_BUILDER createGenerator() {
+            GENERATOR_BUILDER generatorBuilder = std::make_unique<atlas::generator::MersenneTwisterNumberGeneratorFactory>();
+            return generatorBuilder;
         }
 
-        static VECTOR_FACTORY createVectorFactory(GENERATOR generator) {
+        static VECTOR_FACTORY createVectorFactory(GENERATOR_BUILDER generatorBuilder) {
             VECTOR_FACTORY_BUILDER ::setLogger(true);
             VECTOR_FACTORY_BUILDER ::setSecure(true);
-
-            return VECTOR_FACTORY_BUILDER::createWithGenerator(std::move(generator));
+            VECTOR_FACTORY_BUILDER::setStopwatch(std::make_unique<time::StopwatchImpl>());
+            return VECTOR_FACTORY_BUILDER::createWithGeneratorBuilder(std::move(generatorBuilder));
 
         }
 
